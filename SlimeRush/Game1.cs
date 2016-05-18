@@ -1,6 +1,9 @@
+using System;
+using Core.MonoGame.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SlimeRush.IoC;
 
 namespace SlimeRush
 {
@@ -12,14 +15,19 @@ namespace SlimeRush
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        private SpriteFont _font;
+
+        private IFpsMeter _fpsMeter;
+
+        public Game1(IFpsMeter fpsMeter)
         {
+            _fpsMeter = fpsMeter;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 480;
+            graphics.PreferredBackBufferWidth = this.Window.ClientBounds.Width;
+            graphics.PreferredBackBufferHeight = this.Window.ClientBounds.Height;
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
         }
 
@@ -46,6 +54,7 @@ namespace SlimeRush
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _font = Content.Load<SpriteFont>("Fonts/Default");
         }
 
         /// <summary>
@@ -78,9 +87,16 @@ namespace SlimeRush
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            _fpsMeter.Update(gameTime);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(_font,_fpsMeter.FpsString,new Vector2(0,0), Color.AliceBlue);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

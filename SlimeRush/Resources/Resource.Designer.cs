@@ -26,6 +26,10 @@ namespace SlimeRush
 		
 		public static void UpdateIdValues()
 		{
+			global::Core.Resource.String.ApplicationName = global::SlimeRush.Resource.String.ApplicationName;
+			global::Core.Resource.String.Hello = global::SlimeRush.Resource.String.Hello;
+			global::Core.MonoGame.Resource.String.ApplicationName = global::SlimeRush.Resource.String.ApplicationName;
+			global::Core.MonoGame.Resource.String.Hello = global::SlimeRush.Resource.String.Hello;
 		}
 		
 		public partial class Attribute

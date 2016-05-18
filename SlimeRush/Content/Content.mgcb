@@ -10,6 +10,13 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\Core\bin\Debug\Core.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin Fonts/Default.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Default.spritefont
 
