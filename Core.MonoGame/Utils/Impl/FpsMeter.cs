@@ -9,15 +9,27 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Core.MonoGame.Attributes;
+using Core.MonoGame.ContentManagement;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Core.MonoGame.Utils.Impl
 {
+    [Content(typeof(SpriteFont), "Fonts/Default")]
     public class FpsMeter:IFpsMeter
     {
         private double _ms=0;
         private int _frames = 0;
         private int _lastFrames = 0;
+
+        public SpriteFont SpriteFont { get; set; }
+
+        public FpsMeter(IContentManager contentManager)
+        {
+            SpriteFont = contentManager.GetContent<SpriteFont>("Fonts/Default");
+        }
 
         public void Update(GameTime time)
         {

@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ContentAttribute.cs" />
+    <Compile Include="ContentManagement\ContentManager.cs" />
+    <Compile Include="ContentManagement\IContentManager.cs" />
+    <Compile Include="GameObjectFactory\IGameObjectFactory.cs" />
+    <Compile Include="IGameObjectFactoryProvider.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\IFpsMeter.cs" />

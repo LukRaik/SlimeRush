@@ -1,5 +1,7 @@
 using System;
+using Core.MonoGame.ContentManagement;
 using Core.MonoGame.Utils;
+using Core.MonoGame.Utils.Impl;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,15 +17,12 @@ namespace SlimeRush
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private SpriteFont _font;
-
         private IFpsMeter _fpsMeter;
 
-        public Game1(IFpsMeter fpsMeter)
+        public Game1()
         {
-            _fpsMeter = fpsMeter;
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "Content"; 
 
             graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = this.Window.ClientBounds.Width;
@@ -53,8 +52,14 @@ namespace SlimeRush
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            _font = Content.Load<SpriteFont>("Fonts/Default");
+
+            Container.Initialize(this);
+
+            var contentManager = Container.Get<IContentManager>();
+
+            contentManager.LoadContent<FpsMeter>();
+            _fpsMeter = Container.Get<IFpsMeter>();
+
         }
 
         /// <summary>
@@ -94,7 +99,7 @@ namespace SlimeRush
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_font,_fpsMeter.FpsString,new Vector2(0,0), Color.AliceBlue);
+            spriteBatch.DrawString(_fpsMeter.SpriteFont,_fpsMeter.FpsString,new Vector2(0,0), Color.AliceBlue);
 
             spriteBatch.End();
 

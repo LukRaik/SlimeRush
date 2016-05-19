@@ -19,8 +19,7 @@ namespace SlimeRush
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            Container.Initialize();
-            var g = Container.Get<Game1>();
+            var g = new Game1();
             SetContentView((View)g.Services.GetService(typeof(View)));
             g.Run();
         }
