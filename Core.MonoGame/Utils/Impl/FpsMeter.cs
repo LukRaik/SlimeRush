@@ -18,9 +18,9 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Core.MonoGame.Utils.Impl
 {
     [Content(typeof(SpriteFont), "Fonts/Default")]
-    public class FpsMeter:IFpsMeter
+    public class FpsMeter : IFpsMeter
     {
-        private double _ms=0;
+        private double? _ms;
         private int _frames = 0;
         private int _lastFrames = 0;
 
@@ -34,9 +34,9 @@ namespace Core.MonoGame.Utils.Impl
         public void Update(GameTime time)
         {
             _frames++;
-            _ms+=time.ElapsedGameTime.TotalMilliseconds;
-            if (_ms < 1000) return;
-            _ms = 0;
+            if (_ms == null) _ms = time.TotalGameTime.TotalMilliseconds;
+            if (time.TotalGameTime.TotalMilliseconds - _ms < 1000) return;
+            _ms = null;
             _lastFrames = _frames;
             _frames = 0;
         }

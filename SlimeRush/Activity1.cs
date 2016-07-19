@@ -1,8 +1,8 @@
+using System;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using SlimeRush.IoC;
 
 namespace SlimeRush
 {

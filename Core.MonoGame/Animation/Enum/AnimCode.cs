@@ -9,13 +9,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Core.MonoGame.GameObjectFactory;
-using Java.IO;
 
-namespace Core.MonoGame
+namespace Core.MonoGame.Animation.Enum
 {
-    public interface IGameObjectFactoryProvider
+    public enum AnimCode
     {
-        IGameObjectFactory<T> GetFactory<T>();
+        MovLeft,
+        MovRight,
+        Jump,
+        AttackAnim,
     }
 }

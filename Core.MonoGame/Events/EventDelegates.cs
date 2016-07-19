@@ -9,11 +9,9 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Microsoft.Xna.Framework;
 
-namespace Core.MonoGame.GameObjectFactory
+namespace Core.MonoGame.Events
 {
-    public interface IGameObjectFactory<in T>
-    {
-        void Create(T @object);
-    }
+    public delegate void OnGameObjectUpdateEvent(GameObject.GameObject gameObject, GameTime gameTime);
 }

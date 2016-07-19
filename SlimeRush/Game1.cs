@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Core.MonoGame.ContentManagement;
+using Core.MonoGame.GameObject;
+using Core.MonoGame.GameObject.TestObject;
+using Core.MonoGame.Interfaces;
 using Core.MonoGame.Utils;
 using Core.MonoGame.Utils.Impl;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using SlimeRush.IoC;
 
 namespace SlimeRush
@@ -19,10 +25,14 @@ namespace SlimeRush
 
         private IFpsMeter _fpsMeter;
 
+        private GameObject _testGameObject;
+
+        private List<GameObject> _gameObjects = new List<GameObject>();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content"; 
+            Content.RootDirectory = "Content";
 
             graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = this.Window.ClientBounds.Width;
@@ -58,6 +68,16 @@ namespace SlimeRush
             var contentManager = Container.Get<IContentManager>();
 
             contentManager.LoadContent<FpsMeter>();
+
+            contentManager.LoadContent<SlimeTestObject>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                _gameObjects.Add(new SlimeTestObject(contentManager, new Vector2(i*130, 100)));
+            }
+
+            _gameObjects.ForEach(x => x.SetCollisionObjects(_gameObjects.Select(y => (ICollidable) y).ToList()));
+
             _fpsMeter = Container.Get<IFpsMeter>();
 
         }
@@ -83,6 +103,21 @@ namespace SlimeRush
 
             // TODO: Add your update logic here
 
+            var touchCollection = TouchPanel.GetState();
+
+            if (touchCollection.Count > 0)
+            {
+                foreach (var obj in _gameObjects)
+                {
+                    var start = obj.CurPosition();
+                    var end = touchCollection.First().Position;
+                    float distance = Vector2.Distance(start, end);
+                    Vector2 dir = Vector2.Normalize(end - start);
+                    obj.ColidingMove(dir);
+                    obj.Update(gameTime);
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -97,9 +132,11 @@ namespace SlimeRush
 
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            spriteBatch.DrawString(_fpsMeter.SpriteFont,_fpsMeter.FpsString,new Vector2(0,0), Color.AliceBlue);
+            spriteBatch.DrawString(_fpsMeter.SpriteFont, _fpsMeter.FpsString, new Vector2(0, 0), Color.AliceBlue);
+
+            _gameObjects.ForEach(x=>x.Draw(spriteBatch));
 
             spriteBatch.End();
 
