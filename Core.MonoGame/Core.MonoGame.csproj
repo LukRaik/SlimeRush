@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Animation\Enum\AnimCode.cs" />
     <Compile Include="Animation\IAnimation.cs" />
+    <Compile Include="Animation\Impl\AnimatedAnimation.cs" />
     <Compile Include="Animation\Impl\StaticAnimation.cs" />
     <Compile Include="Attributes\ContentAttribute.cs" />
     <Compile Include="ContentManagement\ContentManager.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="Events\EventDelegates.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="GameObject\TestObject\SlimeTestObject.cs" />
+    <Compile Include="Interfaces\IAnimateable.cs" />
+    <Compile Include="Interfaces\IClickable.cs" />
     <Compile Include="Interfaces\ICollidable.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IMovable.cs" />

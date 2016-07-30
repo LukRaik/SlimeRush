@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.MonoGame.Animation;
+using Core.MonoGame.Animation.Enum;
 using Core.MonoGame.Events;
 using Core.MonoGame.Interfaces;
 using Core.MonoGame.Utils;
@@ -15,7 +16,8 @@ namespace Core.MonoGame.GameObject
     public abstract class GameObject :
         IDrawable,
         IUpdateable,
-        ICollidable
+        ICollidable,
+        IAnimateable
     {
         private ICollection<ICollidable> _collidables;
 
@@ -23,10 +25,11 @@ namespace Core.MonoGame.GameObject
 
         private Vector2 _position;
 
-        private event OnGameObjectUpdateEvent _onUpdate;
+        protected event GameObjectEvent OnUpdate;
 
         private float _speed;
 
+        public AnimCode CurrentAnimation => _animation.CurrentAnimation;
 
         protected GameObject(Vector2 position, IAnimation animation)
         {
@@ -37,19 +40,19 @@ namespace Core.MonoGame.GameObject
             SetSpeed();
         }
 
-        public void Register(OnGameObjectUpdateEvent handler)
+        public void Register(GameObjectEvent handler)
         {
-            _onUpdate += handler;
+            OnUpdate += handler;
         }
 
-        public void UnRegister(OnGameObjectUpdateEvent handler)
+        public void UnRegister(GameObjectEvent handler)
         {
-            _onUpdate -= handler;
+            OnUpdate -= handler;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _animation.Draw(spriteBatch, _position);
+            _animation.Draw(spriteBatch, _position, gameTime);
 
 #if DEBUG
             spriteBatch.DrawRectangle(GetBoundry(), Color.Red);
@@ -73,7 +76,7 @@ namespace Core.MonoGame.GameObject
 
         public void Update(GameTime gameTime)
         {
-            _onUpdate?.Invoke(this, gameTime);
+            OnUpdate?.Invoke(this, gameTime);
 
             _animation.Update(gameTime);
         }
@@ -123,6 +126,11 @@ namespace Core.MonoGame.GameObject
             }
 
             return collidedObjects;
+        }
+
+        public void ChangeAnimation(AnimCode code)
+        {
+            _animation.SetAnim(code);
         }
     }
 }

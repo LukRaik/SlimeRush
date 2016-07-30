@@ -13,6 +13,7 @@ using Android.Widget;
 using Core.MonoGame.Animation.Enum;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Core.MonoGame.Animation.Impl
 {
@@ -45,9 +46,14 @@ namespace Core.MonoGame.Animation.Impl
             _scale = new Vector2() { X = scale, Y = scale };
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, GameTime gameTime)
         {
-            spriteBatch.Draw(_texture, position, null, null, _origin, 0F, _scale);
+            spriteBatch.Draw(_texture, position, null, null, _origin, 0F, _scale, Color.White);
+        }
+
+        public void FlippedDraw(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Draw(_texture, position, null, null, _origin, 0F, _scale, Color.White, SpriteEffects.FlipHorizontally);
         }
 
         public void Update(GameTime gameTime)
@@ -59,6 +65,8 @@ namespace Core.MonoGame.Animation.Impl
         {
             return;
         }
+
+        public AnimCode CurrentAnimation => AnimCode.Static;
 
         public Rectangle GetRectangle()
         {

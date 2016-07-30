@@ -9,9 +9,15 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Core.MonoGame.Events;
 using Microsoft.Xna.Framework;
 
-namespace Core.MonoGame.Events
+namespace Core.MonoGame.Interfaces
 {
-    public delegate void GameObjectEvent(GameObject.GameObject gameObject, GameTime gameTime);
+    public interface IClickable
+    {
+        GameObjectEvent OnClick { get; set; }
+
+        bool IsClicked(Vector2 pos, GameTime gameTime);
+    }
 }

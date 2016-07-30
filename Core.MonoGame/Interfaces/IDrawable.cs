@@ -16,6 +16,6 @@ namespace Core.MonoGame.Interfaces
 {
     public interface IDrawable
     {
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, GameTime gameTime);
     }
 }

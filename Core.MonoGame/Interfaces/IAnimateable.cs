@@ -9,9 +9,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Microsoft.Xna.Framework;
+using Core.MonoGame.Animation.Enum;
 
-namespace Core.MonoGame.Events
+namespace Core.MonoGame.Interfaces
 {
-    public delegate void GameObjectEvent(GameObject.GameObject gameObject, GameTime gameTime);
+    public interface IAnimateable
+    {
+        void ChangeAnimation(AnimCode code);
+
+        AnimCode CurrentAnimation { get; }
+    }
 }

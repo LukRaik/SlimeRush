@@ -73,10 +73,10 @@ namespace SlimeRush
 
             for (int i = 0; i < 3; i++)
             {
-                _gameObjects.Add(new SlimeTestObject(contentManager, new Vector2(i*130, 100)));
+                _gameObjects.Add(new SlimeTestObject(contentManager, new Vector2(i * 130, 100)));
             }
 
-            _gameObjects.ForEach(x => x.SetCollisionObjects(_gameObjects.Select(y => (ICollidable) y).ToList()));
+            _gameObjects.ForEach(x => x.SetCollisionObjects(_gameObjects.Select(y => (ICollidable)y).ToList()));
 
             _fpsMeter = Container.Get<IFpsMeter>();
 
@@ -109,12 +109,27 @@ namespace SlimeRush
             {
                 foreach (var obj in _gameObjects)
                 {
-                    var start = obj.CurPosition();
-                    var end = touchCollection.First().Position;
-                    float distance = Vector2.Distance(start, end);
-                    Vector2 dir = Vector2.Normalize(end - start);
-                    obj.ColidingMove(dir);
-                    obj.Update(gameTime);
+                    var clickableObj = obj as IClickable;
+                    if (clickableObj != null)
+                    {
+                        var touchLocation = touchCollection.First();
+
+                        if (touchLocation.State == TouchLocationState.Released)
+                        {
+                            clickableObj.IsClicked(touchLocation.Position, gameTime);
+                        }
+                        else
+                        {
+                            var start = obj.CurPosition();
+                            var end = touchLocation.Position;
+                            float distance = Vector2.Distance(start, end);
+                            Vector2 dir = Vector2.Normalize(end - start);
+                            obj.ColidingMove(dir);
+                        }
+                        obj.Update(gameTime);
+                    }
+
+
                 }
             }
 
@@ -136,7 +151,7 @@ namespace SlimeRush
 
             spriteBatch.DrawString(_fpsMeter.SpriteFont, _fpsMeter.FpsString, new Vector2(0, 0), Color.AliceBlue);
 
-            _gameObjects.ForEach(x=>x.Draw(spriteBatch));
+            _gameObjects.ForEach(x => x.Draw(spriteBatch, gameTime));
 
             spriteBatch.End();
 

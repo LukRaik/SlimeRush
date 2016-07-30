@@ -12,17 +12,16 @@ using Android.Widget;
 
 namespace Core.MonoGame.Attributes
 {
+    [AttributeUsage(AttributeTargets.Class,
+                AllowMultiple = true,
+                Inherited = true)]
     public class ContentAttribute : Attribute
     {
-        public Dictionary<string,Type> Contents = new Dictionary<string, Type>();
+        public Dictionary<string, Type> Contents = new Dictionary<string, Type>();
 
         public ContentAttribute(Type type, string contentName)
         {
-            Contents.Add(contentName,type);
-        }
-        public ContentAttribute(Dictionary<string,Type> contents)
-        {
-            Contents = contents;
+            Contents.Add(contentName, type);
         }
     }
 }

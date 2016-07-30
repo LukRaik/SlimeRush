@@ -19,11 +19,13 @@ namespace Core.MonoGame.Animation
     {
         void SetScale(float scale = 1.0f);
 
-        void Draw(SpriteBatch spriteBatch, Vector2 position);
+        void Draw(SpriteBatch spriteBatch, Vector2 position, GameTime gameTime);
 
         void Update(GameTime gameTime);
 
         void SetAnim(AnimCode code);
+
+        AnimCode CurrentAnimation { get; }
 
         Rectangle GetRectangle();
     }
