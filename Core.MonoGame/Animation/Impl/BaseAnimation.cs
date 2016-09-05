@@ -15,15 +15,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Core.MonoGame.Animation.Impl
 {
-    public class AnimatedAnimation : IAnimation
+    public class BaseAnimation : IAnimation
     {
         public AnimCode CurrentAnimation { get; private set; }
 
         private readonly Dictionary<AnimCode, StaticAnimation[]> _frames = new Dictionary<AnimCode, StaticAnimation[]>();
 
-        private double _frameSpeed;
+        private readonly double _frameSpeed;
 
-        public AnimatedAnimation(Dictionary<AnimCode, Texture2D[]> textures, AnimCode curAnim, double frameSpeed = 1000)
+        public BaseAnimation(Dictionary<AnimCode, Texture2D[]> textures, AnimCode curAnim, double frameSpeed = 1000)
         {
 
             foreach (var animation in textures)
@@ -31,11 +31,11 @@ namespace Core.MonoGame.Animation.Impl
                 var len = animation.Value.Length;
 
                 _frames.Add(animation.Key, new StaticAnimation[len]);
-                if (animation.Key == AnimCode.MovRight) _frames.Add(AnimCode.MovLeft, new StaticAnimation[len]);
+                if (animation.Key == AnimCode.GoMovRight) _frames.Add(AnimCode.GoMovLeft, new StaticAnimation[len]);
                 for (int i = 0; i < len; i++)
                 {
                     _frames[animation.Key][i] = new StaticAnimation(animation.Value[i]);
-                    if (animation.Key == AnimCode.MovRight) _frames[AnimCode.MovLeft][i] = new StaticAnimation(animation.Value[i]);
+                    if (animation.Key == AnimCode.GoMovRight) _frames[AnimCode.GoMovLeft][i] = new StaticAnimation(animation.Value[i]);
                 }
             }
 
@@ -66,19 +66,22 @@ namespace Core.MonoGame.Animation.Impl
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, GameTime gameTime)
         {
-            _timeElapsed = _timeElapsed + gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (_timeElapsed > _frameSpeed)
+            if (_frames[CurrentAnimation].Length != 1)
             {
-                _curFrame++;
+                _timeElapsed = _timeElapsed + gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (_curFrame >= _curAnimationFrames) _curFrame = 0;
+                if (_timeElapsed > _frameSpeed)
+                {
+                    _curFrame++;
 
-                _timeElapsed = 0;
+                    if (_curFrame >= _curAnimationFrames) _curFrame = 0;
+
+                    _timeElapsed = 0;
+                }
+
+                if (CurrentAnimation == AnimCode.GoMovLeft) _frames[AnimCode.GoMovRight][_curFrame].FlippedDraw(spriteBatch, position);
+                else _frames[CurrentAnimation][_curFrame].Draw(spriteBatch, position, gameTime);
             }
-
-            if (CurrentAnimation == AnimCode.MovLeft) _frames[AnimCode.MovRight][_curFrame].FlippedDraw(spriteBatch, position);
-            else _frames[CurrentAnimation][_curFrame].Draw(spriteBatch, position, gameTime);
         }
 
         public void Update(GameTime gameTime)

@@ -16,6 +16,10 @@ namespace Core.Errors
     {
         AssetNotFound,
         CantLoadContent,
-        InvalidAssetType
+        InvalidAssetType,
+        InvalidScene,
+        InvalidTypeOfAnimation,
+        ObjectNotFound,
+        ObjectIsOtherType
     }
 }

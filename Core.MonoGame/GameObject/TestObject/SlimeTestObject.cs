@@ -29,33 +29,33 @@ namespace Core.MonoGame.GameObject.TestObject
     public class SlimeTestObject : GameObject, IClickable
     {
 
-        public SlimeTestObject(IContentManager contentManager, Vector2 position) : base(position, CreateAnimation(contentManager))
+        public SlimeTestObject(IContentLibary contentLibary, Vector2 position) : base(position, CreateAnimation(contentLibary))
         {
-            this.OnClick += OnObjectClick;
+            OnClick += OnObjectClick;
 
             Random rnd = new Random();
-            this.SetSpeed(2f * (float)rnd.Next(1, 13));
+            SetSpeed(2f * (float)rnd.Next(1, 13));
         }
 
 
         private void OnObjectClick(GameObject gameObject, GameTime gameTime)
         {
-            this.ChangeAnimation(CurrentAnimation == AnimCode.MovLeft ? AnimCode.MovRight : AnimCode.MovLeft);
+            ChangeAnimation(CurrentAnimation == AnimCode.GoMovLeft ? AnimCode.GoMovRight : AnimCode.GoMovLeft);
         }
 
-        static IAnimation CreateAnimation(IContentManager contentManager)
+        static IAnimation CreateAnimation(IContentLibary contentLibary)
         {
-            return new AnimatedAnimation(new Dictionary<AnimCode, Texture2D[]>()
+            return new BaseAnimation(new Dictionary<AnimCode, Texture2D[]>()
             {
-                {AnimCode.MovRight, new []
+                {AnimCode.GoMovRight, new []
                 {
-                    contentManager.GetContent<Texture2D>("Characters/SlimeGreen/Slime1"),
-                    contentManager.GetContent<Texture2D>("Characters/SlimeGreen/Slime2"),
-                    contentManager.GetContent<Texture2D>("Characters/SlimeGreen/Slime3"),
-                    contentManager.GetContent<Texture2D>("Characters/SlimeGreen/Slime4")
+                    contentLibary.GetContent<Texture2D>("Characters/SlimeGreen/Slime1"),
+                    contentLibary.GetContent<Texture2D>("Characters/SlimeGreen/Slime2"),
+                    contentLibary.GetContent<Texture2D>("Characters/SlimeGreen/Slime3"),
+                    contentLibary.GetContent<Texture2D>("Characters/SlimeGreen/Slime4")
                 } }
 
-            }, AnimCode.MovRight, 275);
+            }, AnimCode.GoMovRight, 275);
         }
 
         public GameObjectEvent OnClick { get; set; }

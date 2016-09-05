@@ -14,10 +14,15 @@ namespace Core.MonoGame.Animation.Enum
 {
     public enum AnimCode
     {
-        Static = -1,
-        MovLeft,
-        MovRight,
-        Jump,
-        AttackAnim
+        //Game objects
+        GoStatic = -1,
+        GoMovLeft,
+        GoMovRight,
+        GoJump,
+        GoAttackAnim,
+
+        //Buttons
+        BnPressed,
+        BnFree
     }
 }

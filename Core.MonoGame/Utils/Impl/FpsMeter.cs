@@ -26,9 +26,9 @@ namespace Core.MonoGame.Utils.Impl
 
         public SpriteFont SpriteFont { get; set; }
 
-        public FpsMeter(IContentManager contentManager)
+        public FpsMeter(IContentLibary contentLibary)
         {
-            SpriteFont = contentManager.GetContent<SpriteFont>("Fonts/Default");
+            SpriteFont = contentLibary.GetContent<SpriteFont>("Fonts/Default");
         }
 
         public void Update(GameTime time)

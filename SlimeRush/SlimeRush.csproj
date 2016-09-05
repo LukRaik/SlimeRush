@@ -63,8 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity1.cs" />
-    <Compile Include="Game1.cs" />
-    <Compile Include="IoC\Container.cs" />
+    <Compile Include="ContentManagement\ContentLibary.cs" />
+    <Compile Include="SlimeGame.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

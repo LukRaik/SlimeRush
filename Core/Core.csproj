@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Scene.cs" />
     <Compile Include="Errors\GameErrorCode.cs" />
     <Compile Include="Errors\GameException.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

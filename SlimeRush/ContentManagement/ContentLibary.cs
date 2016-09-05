@@ -1,31 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Android.Accounts;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Core.Errors;
 using Core.MonoGame.Attributes;
+using Core.MonoGame.Content;
+using Core.MonoGame.ContentManagement;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Ninject;
 
-namespace Core.MonoGame.ContentManagement
+namespace SlimeRush.ContentManagement
 {
-    public class ContentManager : IContentManager
+    public class ContentLibary : IContentLibary
     {
         private Dictionary<Type, Dictionary<string, object>> _contents = new Dictionary<Type, Dictionary<string, object>>();
 
-        private HashSet<Type> _contentsLoaded = new HashSet<Type>();
+        private readonly HashSet<Type> _contentsLoaded = new HashSet<Type>();
 
-        private readonly Microsoft.Xna.Framework.Content.ContentManager _contentManager;
+        private ContentManager _contentManager;
 
-        public ContentManager(Microsoft.Xna.Framework.Content.ContentManager manager)
+
+        public ContentLibary()
         {
-            _contentManager = manager;
         }
 
         public void LoadContent<T>() where T : class
@@ -57,10 +53,10 @@ namespace Core.MonoGame.ContentManagement
                 if (type == typeof(Texture2D)) result = _contentManager.Load<Texture2D>(path);
                 else if (type == typeof(SpriteFont)) result = _contentManager.Load<SpriteFont>(path);
                 else throw new GameException(GameErrorCode.InvalidAssetType);
-                
+
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new GameException(GameErrorCode.CantLoadContent, path);
             }
@@ -81,6 +77,11 @@ namespace Core.MonoGame.ContentManagement
         {
             _contents = new Dictionary<Type, Dictionary<string, object>>();
             _contentManager.Unload();
+        }
+
+        public void InjectGameContentManager(IGame game)
+        {
+            _contentManager = game.GameContentManager;
         }
     }
 }

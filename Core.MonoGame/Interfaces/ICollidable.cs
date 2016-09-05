@@ -13,11 +13,13 @@ using Microsoft.Xna.Framework;
 
 namespace Core.MonoGame.Interfaces
 {
-    public interface ICollidable:IMovable
+    public interface ICollidable : IMovable
     {
         void SetCollisionObjects(IList<ICollidable> collidableObjects);
 
         ICollection<ICollidable> ColidingMove(Vector2 moveVector);
+
+        bool TrySetPosition(Vector2 position);
 
         Rectangle GetBoundry();
 

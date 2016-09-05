@@ -66,7 +66,7 @@ namespace Core.MonoGame.Animation.Impl
             return;
         }
 
-        public AnimCode CurrentAnimation => AnimCode.Static;
+        public AnimCode CurrentAnimation => AnimCode.GoStatic;
 
         public Rectangle GetRectangle()
         {

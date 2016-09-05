@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Errors;
 using Core.MonoGame.Animation;
 using Core.MonoGame.Animation.Enum;
+using Core.MonoGame.Animation.Impl;
 using Core.MonoGame.Events;
 using Core.MonoGame.Interfaces;
+using Core.MonoGame.ObjectAction;
 using Core.MonoGame.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,21 +26,31 @@ namespace Core.MonoGame.GameObject
 
         private readonly IAnimation _animation;
 
-        private Vector2 _position;
+        private IObjectAction _action;
+
+        protected Vector2 Position { get; private set; }
 
         protected event GameObjectEvent OnUpdate;
 
-        private float _speed;
-
         public AnimCode CurrentAnimation => _animation.CurrentAnimation;
 
-        protected GameObject(Vector2 position, IAnimation animation)
-        {
-            _position = position;
+        public float Speed { get; private set; }
 
-            _animation = animation;
+        protected GameObject(Vector2 position, IAnimation animation = null)
+        {
+            Position = position;
+
+            _animation = animation ?? new BlankAnimation();
 
             SetSpeed();
+        }
+
+        protected T GetAnimation<T>() where T : IAnimation
+        {
+            var type = typeof(T);
+            var animType = typeof(T);
+            if (type == animType || type.IsSubclassOf(animType)) return (T)_animation;
+            throw new GameException(GameErrorCode.InvalidTypeOfAnimation);
         }
 
         public void Register(GameObjectEvent handler)
@@ -52,33 +65,50 @@ namespace Core.MonoGame.GameObject
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _animation.Draw(spriteBatch, _position, gameTime);
+            _animation.Draw(spriteBatch, Position, gameTime);
 
 #if DEBUG
             spriteBatch.DrawRectangle(GetBoundry(), Color.Red);
+            spriteBatch.DrawCircle(Position, 1f, 360, Color.Yellow);
 #endif
         }
 
         public void SetSpeed(float speed = 1f)
         {
-            _speed = speed;
+            Speed = speed;
         }
 
         public void Move(Vector2 vector)
         {
-            _position += Vector2.Multiply(vector, _speed);
+            Position += Vector2.Multiply(vector, Speed);
+        }
+
+        public void SetPosition(Vector2 vector)
+        {
+            Position = vector;
         }
 
         public Vector2 CurPosition()
         {
-            return _position;
+            return Position;
         }
 
         public void Update(GameTime gameTime)
         {
             OnUpdate?.Invoke(this, gameTime);
 
+            if (_action != null)
+            {
+                _action.Do(this, gameTime);
+                if (_action.IsFinished) _action = null;
+            }
+
             _animation.Update(gameTime);
+        }
+
+        public void SetAction(IObjectAction action)
+        {
+            _action = action;
         }
 
         public void SetCollisionObjects(IList<ICollidable> collidableObjects)
@@ -97,12 +127,22 @@ namespace Core.MonoGame.GameObject
             return collidingWith;
         }
 
+        public bool TrySetPosition(Vector2 position)
+        {
+            foreach (var obj in _collidables.Select(x => x.GetBoundry()))
+            {
+                if (obj.Contains(position)) return false;
+            }
+            this.Position = position;
+            return true;
+        }
+
         public Rectangle GetBoundry()
         {
             var myRectangle = _animation.GetRectangle();
 
-            myRectangle.X += (int)_position.X;
-            myRectangle.Y += (int)_position.Y;
+            myRectangle.X += (int)Position.X;
+            myRectangle.Y += (int)Position.Y;
 
             return myRectangle;
         }
@@ -114,7 +154,7 @@ namespace Core.MonoGame.GameObject
 
             var myBoundry = GetBoundry();
 
-            var multipledMoveVector = Vector2.Multiply(moveVector, _speed);
+            var multipledMoveVector = Vector2.Multiply(moveVector, Speed);
 
             myBoundry.X += (int)multipledMoveVector.X;
             myBoundry.Y += (int)multipledMoveVector.Y;
